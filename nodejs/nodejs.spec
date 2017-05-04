@@ -19,7 +19,7 @@
 %global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 2
+%global nodejs_release 2.01
 
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
@@ -109,6 +109,8 @@ Patch4: 0004-Fix-compatibility-with-GCC-7.patch
 # Revert this upstream patch until RHEL 7 upgrades to 1.0.2
 Patch5: EPEL01-openssl101-compat.patch
 
+Patch100: 0100-Use-xargs-for-long-commands.patch
+
 BuildRequires: python-devel
 BuildRequires: libuv-devel >= 1:1.9.1
 Requires: libuv >= 1:1.9.1
@@ -118,7 +120,7 @@ BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
 
-%if 0%{?epel}
+%if 0%{?rhel} == 7
 BuildRequires: openssl-devel >= 1:1.0.1
 %else
 %if 0%{?fedora} > 25
@@ -145,6 +147,7 @@ Provides: nodejs(engine) = %{nodejs_version}
 # The ham-radio group has agreed to rename their binary for us, but
 # in the meantime, we're setting an explicit Conflicts: here
 Conflicts: node <= 0.3.2-12
+Obsoletes: nodejs < 1:6.10.1-2
 
 # The punycode module was absorbed into the standard library in v0.6.
 # It still exists as a seperate package for the benefit of users of older
@@ -174,15 +177,6 @@ Provides: bundled(v8) = %{v8_version}
 # Node.js and http-parser share an upstream. The http-parser upstream does not
 # do releases often and is almost always far behind the bundled version
 Provides: bundled(http-parser) = %{http_parser_version}
-
-# Make sure we keep NPM up to date when we update Node.js
-%if 0%{?epel}
-# EPEL doesn't support Recommends, so make it strict
-Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%else
-Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%endif
-
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -258,6 +252,8 @@ rm -rf deps/icu-small \
 %patch2 -p1
 %patch5 -p1
 %endif
+
+%patch100 -p0
 
 
 %build
@@ -422,6 +418,11 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu May 04 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.01
+- Rebuild from EPEL as a bridge from the nodesource release to EPEL
+  - add a patch to fix building with long paths
+  - don't Requires: npm
+.
 * Mon Apr 03 2017 Stephen Gallagher <sgallagh@redhat.com> - 1:6.10.1-3
 - Move NPM manpages into the correct subpackage
 - Fixes: rhbx#1433403
