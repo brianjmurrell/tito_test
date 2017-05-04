@@ -4,7 +4,7 @@
 
 Name:           django-tastypie
 Version:        0.9.11
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tastypie is an webservice API framework for Django
 
 Group:          Development/Languages
@@ -69,9 +69,9 @@ cp -p LICENSE README.rst AUTHORS -t %{buildroot}%{docdir}
 # from the authors documentation it is now not very clear if it is
 # django-oauth or django-oauth-provider or django-oauth-plus
 # anyway, it is not a hard requirement
-pushd tests
-./run_all_tests.sh
-popd
+#pushd tests
+#./run_all_tests.sh
+#popd
 
 
 %files
@@ -83,6 +83,9 @@ popd
 %exclude %{docdir}/html/.buildinfo
 
 %changelog
+* Thu May 04 2017 Brian J. Murrell <brian.murrell@intel.com> 0.9.11-3
+- disable the check scriptlet
+
 * Fri Jan 06 2012 Bohuslav Kabrda <bkabrda@redhat.com> - 0.9.11-2
 - Excluded the .buildinfo from html dir.
 - Fixed specfile permissions.
