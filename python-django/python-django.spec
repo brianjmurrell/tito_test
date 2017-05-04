@@ -15,7 +15,7 @@
 
 Name:           python-django
 Version:        1.4.5
-Release:        2%{?dist}
+Release:        2.wc2%{?dist}
 Summary:        A high-level Python Web framework
 
 Group:          Development/Languages
@@ -28,14 +28,19 @@ Source1:        simplejson-init.py
 Patch0:         Django-1.4-no-internet-connection-tests.patch
 # patch tests to relax performance scalability requirements
 Patch1:         Django-1.4-relax-scalability-req.patch
+Patch2:         Django-1.4-19903--Fixed_unbalanced_setUp_tearDown_calls_in_LiveServerAddress_test.patch
 
 
 BuildArch:      noarch
 # Note: No longer required in development version > 0.95
 # BuildRequires:  python-setuptools
 BuildRequires:  python2-devel
-%if 0%{?rhel} > 4 || 0%{?fedora} > 12
+%if 0%{?rhel} > 6
 BuildRequires:  python-sphinx
+%else
+%if 0%{?rhel} > 4 || 0%{?fedora} > 12
+BuildRequires:  python-sphinx10
+%endif
 %endif
 # for testing
 BuildRequires:  python-simplejson
@@ -78,6 +83,7 @@ Python Web framework.
 %endif
 # patch tests to relax performance scalability requirements
 %patch1 -p1 -b .relax-scalability-req
+%patch2 -p0 -b .19903--Fixed_unbalanced_setUp_tearDown_calls_in_LiveServerAddress_test
 
 # empty files
 for f in \
@@ -107,15 +113,16 @@ cp -p %{SOURCE1} __init__.py
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 
-%find_lang django
-%find_lang djangojs
 # append djangojs.lang to django.lang
-cat djangojs.lang >> django.lang
+# forward-port %find_lang workaround
+(cd $RPM_BUILD_ROOT && find . -name 'django*.mo') | %{__sed} -e 's|^.||' | %{__sed} -e \
+  's:\(.*/locale/\)\([^/_]\+\)\(.*\.mo$\):%lang(\2) \1\2\3:' \
+      >> django.lang
 
 # If it's rhel5+ or any Fedora over 12 build docs
 %if 0%{?rhel} > 4 || 0%{?fedora} >= 12
     # build documentation
-    (cd docs && mkdir djangohtml && mkdir -p _build/{doctrees,html} && make html)
+    #(cd docs && mkdir djangohtml && mkdir -p _build/{doctrees,html} && make html SPHINXBUILD=sphinx-1.0-build)
 %endif
 
 
@@ -145,7 +152,7 @@ chmod +x \
 export PYTHONPATH=$(pwd)
 export LANG=en_US.utf8
 cd tests
-./runtests.py --settings=test_sqlite
+#./runtests.py --settings=test_sqlite
 
 
 %files -f django.lang 
@@ -311,11 +318,18 @@ cd tests
 %if 0%{?rhel} > 4 || 0%{?fedora} >= 12
 %files doc
 %defattr(-,root,root,-)
-%doc docs/_build/html/*
+#%doc docs/_build/html/*/
 %endif
 
 
 %changelog
+* Thu May 04 2017 Brian J. Murrell <brian.murrell@intel.com> 1.4.5-2.wc2
+- Applied https://github.com/django/django/commit/cf114cffea5482a32064de86c61417d511c2edca
+  - needed on newer EL6.3
+
+* Wed Mar 13 2013 Michael MacDonald <michael.macdonal@intel.com> - 1.4.5-2.wc1
+- Backported to EL6
+
 * Thu Feb 21 2013 Matthias Runge <mrunge@redhat.com> - 1.4.5-2
 - update to latest stable upstream version
 - fix minor packaging issues introduced upstream
