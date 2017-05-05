@@ -87,5 +87,5 @@ rm -rf html/.{doctrees,buildinfo}
 %doc html 
 
 %changelog
-* Fri May 05 2017 Brian J. Murrell <brian.murrell@intel.com> - 0.4.2-1
+* Fri May 05 2017 Brian J. Murrell <brian.murrell@intel.com> 0.4.2-1
 - Initial package.
