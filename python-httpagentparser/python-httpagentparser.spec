@@ -52,5 +52,5 @@ rm -rf %{pypi_name}.egg-info
 %{python2_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
-* Fri May 05 2017 Brian J. Murrell <brian.murrell@intel.com> - 1.5.0-1
+* Fri May 05 2017 Brian J. Murrell <brian.murrell@intel.com> 1.5.0-1
 - Initial package.
