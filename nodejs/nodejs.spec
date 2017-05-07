@@ -19,7 +19,7 @@
 %global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 2.01
+%global nodejs_release 2.02
 
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
@@ -418,6 +418,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Sun May 07 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.02
+- Handle redefinition of release properly (brian.murrell@intel.com)
+
 * Thu May 04 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.01
 - Rebuild from EPEL as a bridge from the nodesource release to EPEL
   - add a patch to fix building with long paths
