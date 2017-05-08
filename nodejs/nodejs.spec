@@ -19,7 +19,7 @@
 %global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 2.03
+%global nodejs_release 2.04
 
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
@@ -418,6 +418,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Mon May 08 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.04
+- Revert "Handle redefinition of release properly" (brian.murrell@intel.com) 6.10.1-2.04
+
 * Mon May 08 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.03
 - Bump release to make version superior to previously built packages
   with .git.* in their %{release}
