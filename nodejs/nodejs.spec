@@ -418,6 +418,10 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Mon May 08 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.03
+- Bump release to make version superior to previously built packages
+  with .git.* in their %{release}
+
 * Sun May 07 2017 Brian J. Murrell <brian.murrell@intel.com> 6.10.1-2.02
 - Handle redefinition of release properly (brian.murrell@intel.com)
 
