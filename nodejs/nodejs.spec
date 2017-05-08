@@ -62,7 +62,7 @@
 # main package forever, we will just construct one for npm that is guaranteed
 # to increment safely. Changing this can only be done during an update when the
 # base npm version number is increasing.
-%global npm_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{release}
+%global npm_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
 
 # Filter out the NPM bundled dependencies so we aren't providing them
 %global __provides_exclude_from ^%{_prefix}/lib/node_modules/npm/.*$
@@ -188,7 +188,7 @@ real-time applications that run across distributed devices.
 %package devel
 Summary: JavaScript runtime - development headers
 Group: Development/Languages
-Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Requires: libuv-devel%{?_isa}
 Requires: openssl-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
@@ -201,14 +201,14 @@ Development headers for the Node.js JavaScript runtime.
 Summary: Node.js Package Manager
 Epoch: %{npm_epoch}
 Version: %{npm_version}
-Release: %{npm_release}
+Release: %{npm_release}%{?dist}
 
 # We used to ship npm separately, but it is so tightly integrated with Node.js
 # (and expected to be present on all Node.js systems) that we ship it bundled
 # now.
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
-Requires: nodejs = %{epoch}:%{version}-%{release}
+Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 # Do not add epoch to the virtual NPM provides or it will break
 # the automatic dependency-generation script.
@@ -226,8 +226,8 @@ BuildArch: noarch
 # We don't require that the main package be installed to
 # use the docs, but if it is installed, make sure the
 # version always matches
-Conflicts: %{name} > %{epoch}:%{version}-%{release}
-Conflicts: %{name} < %{epoch}:%{version}-%{release}
+Conflicts: %{name} > %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description docs
 The API documentation for the Node.js JavaScript runtime.
